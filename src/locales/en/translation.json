@@ -18,7 +18,8 @@
     "success": "Success",
     "warning": "Warning",
     "info": "Information",
-    "logout": "Logout"
+    "logout": "Logout",
+    "share": "Share"
   },
   "auth": {
     "title": "Welcome 👋 to City Pulse",
@@ -165,5 +166,19 @@
     "capacity": "Capacity",
     "register": "Register",
     "share": "Share Event"
+  },
+  "detail": {
+    "description": "Description",
+    "location": "Location",
+    "getDirections": "Get Directions",
+    "call": "Call",
+    "share": "Share",
+    "shareMessage": "Share this item",
+    "shared": "Shared",
+    "sharedMessage": "Item shared successfully",
+    "error": "Error",
+    "cannotOpenMaps": "Cannot open maps application",
+    "eventDetails": "Event Details",
+    "tags": "Tags"
   }
 }

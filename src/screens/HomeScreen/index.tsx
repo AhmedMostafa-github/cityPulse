@@ -17,8 +17,9 @@ import { useEventsStore } from "../../stores/eventsStore";
 import { useVenuesStore } from "../../stores/venuesStore";
 import { useFavoritesStore } from "../../stores/favoritesStore";
 import { styles } from "./styles";
+import { HomeScreenProps } from "../../navigation/types";
 
-export const HomeScreen: React.FC = () => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors, theme } = useTheme();
   const { isRTL } = useLanguage();
@@ -233,73 +234,105 @@ export const HomeScreen: React.FC = () => {
             ))
           ) : featuredPlaces.length > 0 ? (
             featuredPlaces.map((place) => (
-              <ThemedCard key={place.id} style={styles.featuredCard}>
-                <View style={styles.featuredCardHeader}>
-                  <View
-                    style={[
-                      styles.featuredImage,
-                      { backgroundColor: colors.border },
-                    ]}
-                  >
-                    {place.imageUrl ? (
-                      <Image
-                        source={{ uri: place.imageUrl }}
-                        style={styles.featuredImage}
-                        resizeMode="cover"
-                      />
-                    ) : (
-                      <Ionicons
-                        name="image"
-                        size={40}
-                        color={colors.textSecondary}
-                      />
-                    )}
-                  </View>
-                  <TouchableOpacity
-                    style={[
-                      styles.favoriteButton,
-                      {
-                        [isRTL ? "left" : "right"]: 8,
+              <TouchableOpacity
+                key={place.id}
+                onPress={() => {
+                  const venue = venues.find((v) => v.id === place.id);
+                  if (venue) {
+                    navigation.navigate("Detail", {
+                      item: {
+                        id: venue.id,
+                        name: venue.name,
+                        nameAr: venue.name,
+                        description: venue.type,
+                        descriptionAr: venue.type,
+                        category: venue.type,
+                        rating: venue.upcomingEvents._total || 0,
+                        price: "Free",
+                        address: `${venue.city.name}, ${venue.state.name}`,
+                        addressAr: `${venue.city.name}, ${venue.state.name}`,
+                        coordinates: {
+                          latitude: 24.7136, // Default coordinates
+                          longitude: 46.6753,
+                        },
+                        images: venue.images?.map((img) => img.url) || [],
+                        isOpen: true,
+                        isFavorite: isFavorite(venue.id, "venue"),
+                        tags: [venue.type],
                       },
-                    ]}
-                    onPress={() => {
-                      const venue = venues.find((v) => v.id === place.id);
-                      if (venue) {
-                        if (isFavorite(place.id, "venue")) {
-                          removeFromFavorites(place.id, "venue");
-                        } else {
-                          addToFavorites(venue, "venue");
+                      type: "venue",
+                    });
+                  }
+                }}
+              >
+                <ThemedCard style={styles.featuredCard}>
+                  <View style={styles.featuredCardHeader}>
+                    <View
+                      style={[
+                        styles.featuredImage,
+                        { backgroundColor: colors.border },
+                      ]}
+                    >
+                      {place.imageUrl ? (
+                        <Image
+                          source={{ uri: place.imageUrl }}
+                          style={styles.featuredImage}
+                          resizeMode="cover"
+                        />
+                      ) : (
+                        <Ionicons
+                          name="image"
+                          size={40}
+                          color={colors.textSecondary}
+                        />
+                      )}
+                    </View>
+                    <TouchableOpacity
+                      style={[
+                        styles.favoriteButton,
+                        {
+                          [isRTL ? "left" : "right"]: 8,
+                        },
+                      ]}
+                      onPress={() => {
+                        const venue = venues.find((v) => v.id === place.id);
+                        if (venue) {
+                          if (isFavorite(place.id, "venue")) {
+                            removeFromFavorites(place.id, "venue");
+                          } else {
+                            addToFavorites(venue, "venue");
+                          }
                         }
-                      }
-                    }}
+                      }}
+                    >
+                      <Ionicons
+                        name={
+                          isFavorite(place.id, "venue")
+                            ? "heart"
+                            : "heart-outline"
+                        }
+                        size={20}
+                        color={
+                          isFavorite(place.id, "venue")
+                            ? "#FF6B6B"
+                            : colors.textSecondary
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={[styles.featuredTitle, { color: colors.text }]}>
+                    {getLocalizedName(place, "name")}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.featuredSubtitle,
+                      { color: colors.textSecondary },
+                    ]}
                   >
-                    <Ionicons
-                      name={
-                        isFavorite(place.id, "venue")
-                          ? "heart"
-                          : "heart-outline"
-                      }
-                      size={20}
-                      color={
-                        isFavorite(place.id, "venue")
-                          ? "#FF6B6B"
-                          : colors.textSecondary
-                      }
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Text style={[styles.featuredTitle, { color: colors.text }]}>
-                  {getLocalizedName(place, "name")}
-                </Text>
-                <Text
-                  style={[
-                    styles.featuredSubtitle,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  {place.rating} events • {place.city}, {place.state}
-                </Text>
-              </ThemedCard>
+                    {place.rating} events • {place.city}, {place.state}
+                  </Text>
+                </ThemedCard>
+              </TouchableOpacity>
             ))
           ) : (
             <ThemedCard style={styles.featuredCard}>
@@ -382,59 +415,96 @@ export const HomeScreen: React.FC = () => {
           ))
         ) : upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
-            <ThemedCard key={event.id} style={styles.eventCard}>
-              <View
-                style={[styles.eventDate, { backgroundColor: colors.primary }]}
-              >
-                <Text style={styles.eventDay}>{event.date}</Text>
-                <Text style={styles.eventMonth}>
-                  {getLocalizedName(event, "month")}
-                </Text>
-              </View>
-              <View style={styles.eventInfo}>
-                <Text style={[styles.eventTitle, { color: colors.text }]}>
-                  {getLocalizedName(event, "title")}
-                </Text>
-                <Text
+            <TouchableOpacity
+              key={event.id}
+              onPress={() => {
+                const eventData = events.find((e) => e.id === event.id);
+                if (eventData) {
+                  navigation.navigate("Detail", {
+                    item: {
+                      id: eventData.id,
+                      title: eventData.name,
+                      titleAr: eventData.name,
+                      description:
+                        eventData.info || "Event details coming soon",
+                      descriptionAr: eventData.info || "تفاصيل الحدث قريباً",
+                      date: eventData.dates.start.localDate,
+                      time: eventData.dates.start.localTime || "TBD",
+                      location:
+                        eventData._embedded?.venues?.[0]?.name ||
+                        "Location TBD",
+                      locationAr:
+                        eventData._embedded?.venues?.[0]?.name ||
+                        "الموقع قيد التحديد",
+                      category:
+                        eventData.classifications?.[0]?.segment?.name ||
+                        "Event",
+                      price: "Free",
+                      images: eventData.images?.map((img) => img.url) || [],
+                      isFavorite: isFavorite(eventData.id, "event"),
+                    },
+                    type: "event",
+                  });
+                }
+              }}
+            >
+              <ThemedCard style={styles.eventCard}>
+                <View
                   style={[
-                    styles.eventLocation,
-                    { color: colors.textSecondary },
+                    styles.eventDate,
+                    { backgroundColor: colors.primary },
                   ]}
                 >
-                  {getLocalizedName(event, "location")} • {event.time}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={[
-                  styles.eventFavoriteButton,
-                  {
-                    [isRTL ? "left" : "right"]: 8,
-                  },
-                ]}
-                onPress={() => {
-                  const eventData = events.find((e) => e.id === event.id);
-                  if (eventData) {
-                    if (isFavorite(event.id, "event")) {
-                      removeFromFavorites(event.id, "event");
-                    } else {
-                      addToFavorites(eventData, "event");
+                  <Text style={styles.eventDay}>{event.date}</Text>
+                  <Text style={styles.eventMonth}>
+                    {getLocalizedName(event, "month")}
+                  </Text>
+                </View>
+                <View style={styles.eventInfo}>
+                  <Text style={[styles.eventTitle, { color: colors.text }]}>
+                    {getLocalizedName(event, "title")}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.eventLocation,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    {getLocalizedName(event, "location")} • {event.time}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={[
+                    styles.eventFavoriteButton,
+                    {
+                      [isRTL ? "left" : "right"]: 8,
+                    },
+                  ]}
+                  onPress={() => {
+                    const eventData = events.find((e) => e.id === event.id);
+                    if (eventData) {
+                      if (isFavorite(event.id, "event")) {
+                        removeFromFavorites(event.id, "event");
+                      } else {
+                        addToFavorites(eventData, "event");
+                      }
                     }
-                  }
-                }}
-              >
-                <Ionicons
-                  name={
-                    isFavorite(event.id, "event") ? "heart" : "heart-outline"
-                  }
-                  size={18}
-                  color={
-                    isFavorite(event.id, "event")
-                      ? "#FF6B6B"
-                      : colors.textSecondary
-                  }
-                />
-              </TouchableOpacity>
-            </ThemedCard>
+                  }}
+                >
+                  <Ionicons
+                    name={
+                      isFavorite(event.id, "event") ? "heart" : "heart-outline"
+                    }
+                    size={18}
+                    color={
+                      isFavorite(event.id, "event")
+                        ? "#FF6B6B"
+                        : colors.textSecondary
+                    }
+                  />
+                </TouchableOpacity>
+              </ThemedCard>
+            </TouchableOpacity>
           ))
         ) : (
           <ThemedCard style={styles.eventCard}>
