@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { ThemedCard } from "../../components/ThemedCard";
 import { ThemedButton } from "../../components/ThemedButton";
 import { mockPlaces, mockEvents } from "../../services/mockData";
+import { useEventsStore } from "../../stores/eventsStore";
 import { styles } from "./styles";
 
 const { width } = Dimensions.get("window");
@@ -21,6 +22,27 @@ export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors, theme } = useTheme();
   const { isRTL } = useLanguage();
+  const { events, loading, error, fetchEvents } = useEventsStore();
+
+  // Fetch events when component mounts
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
+  // Console log the events data
+  useEffect(() => {
+    console.log("Events data from API:", events);
+    console.log("Events count:", events.length);
+    if (events.length > 0) {
+      console.log("First event:", events[0]);
+      console.log("Event name:", events[0].name);
+      console.log("Event date:", events[0].dates.start.localDate);
+      console.log("Event time:", events[0].dates.start.localTime);
+    }
+    if (error) {
+      console.error("Error fetching events:", error);
+    }
+  }, [events, error]);
 
   // Safe fallback if translations aren't ready
   const safeTranslate = (key: string, fallback: string) => {
@@ -72,27 +94,26 @@ export const HomeScreen: React.FC = () => {
         : place.category,
   }));
 
-  const upcomingEvents = mockEvents.slice(0, 2).map((event) => ({
-    id: event.id,
-    title: event.title,
-    titleAr: event.titleAr,
-    date: event.date.split("-")[2], // Extract day from date
-    month:
-      event.date.split("-")[1] === "08"
-        ? "AUG"
-        : event.date.split("-")[1] === "09"
-        ? "SEP"
-        : "AUG",
-    monthAr:
-      event.date.split("-")[1] === "08"
-        ? "أغسطس"
-        : event.date.split("-")[1] === "09"
-        ? "سبتمبر"
-        : "أغسطس",
-    location: event.location,
-    locationAr: event.locationAr,
-    time: event.time,
-  }));
+  const upcomingEvents = events.slice(0, 12).map((event) => {
+    const eventDate = new Date(event.dates.start.localDate);
+    const day = eventDate.getDate().toString().padStart(2, "0");
+    const month = eventDate
+      .toLocaleDateString("en-US", { month: "short" })
+      .toUpperCase();
+    const monthAr = eventDate.toLocaleDateString("ar-SA", { month: "long" });
+
+    return {
+      id: event.id,
+      title: event.name,
+      titleAr: event.name, // Using English name as fallback for Arabic
+      date: day,
+      month: month,
+      monthAr: monthAr,
+      location: event._embedded?.venues?.[0]?.name || "Location TBD",
+      locationAr: event._embedded?.venues?.[0]?.name || "الموقع قيد التحديد",
+      time: event.dates.start.localTime || "TBD",
+    };
+  });
 
   const getLocalizedName = (item: any, field: string) => {
     try {
@@ -232,28 +253,45 @@ export const HomeScreen: React.FC = () => {
         >
           {safeTranslate("home.upcomingEvents", "Upcoming Events")}
         </Text>
-        {upcomingEvents.map((event) => (
-          <ThemedCard key={event.id} style={styles.eventCard}>
-            <View
-              style={[styles.eventDate, { backgroundColor: colors.primary }]}
-            >
-              <Text style={styles.eventDay}>{event.date}</Text>
-              <Text style={styles.eventMonth}>
-                {getLocalizedName(event, "month")}
-              </Text>
-            </View>
-            <View style={styles.eventInfo}>
-              <Text style={[styles.eventTitle, { color: colors.text }]}>
-                {getLocalizedName(event, "title")}
-              </Text>
-              <Text
-                style={[styles.eventLocation, { color: colors.textSecondary }]}
-              >
-                {getLocalizedName(event, "location")} • {event.time}
-              </Text>
-            </View>
+        {loading ? (
+          <ThemedCard style={styles.eventCard}>
+            <Text style={[styles.eventTitle, { color: colors.textSecondary }]}>
+              Loading events...
+            </Text>
           </ThemedCard>
-        ))}
+        ) : upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event) => (
+            <ThemedCard key={event.id} style={styles.eventCard}>
+              <View
+                style={[styles.eventDate, { backgroundColor: colors.primary }]}
+              >
+                <Text style={styles.eventDay}>{event.date}</Text>
+                <Text style={styles.eventMonth}>
+                  {getLocalizedName(event, "month")}
+                </Text>
+              </View>
+              <View style={styles.eventInfo}>
+                <Text style={[styles.eventTitle, { color: colors.text }]}>
+                  {getLocalizedName(event, "title")}
+                </Text>
+                <Text
+                  style={[
+                    styles.eventLocation,
+                    { color: colors.textSecondary },
+                  ]}
+                >
+                  {getLocalizedName(event, "location")} • {event.time}
+                </Text>
+              </View>
+            </ThemedCard>
+          ))
+        ) : (
+          <ThemedCard style={styles.eventCard}>
+            <Text style={[styles.eventTitle, { color: colors.textSecondary }]}>
+              No events available
+            </Text>
+          </ThemedCard>
+        )}
       </View>
     </ScrollView>
   );
