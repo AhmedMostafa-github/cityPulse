@@ -12,26 +12,18 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { ThemedCard } from "../../components/ThemedCard";
-import { ThemedButton } from "../../components/ThemedButton";
-import { mockPlaces, mockEvents } from "../../services/mockData";
+
 import { useEventsStore } from "../../stores/eventsStore";
 import { useVenuesStore } from "../../stores/venuesStore";
 import { useFavoritesStore } from "../../stores/favoritesStore";
 import { styles } from "./styles";
 
-const { width } = Dimensions.get("window");
-
 export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors, theme } = useTheme();
   const { isRTL } = useLanguage();
-  const { events, loading, error, fetchEvents } = useEventsStore();
-  const {
-    venues,
-    loading: venuesLoading,
-    error: venuesError,
-    fetchVenues,
-  } = useVenuesStore();
+  const { events, loading, fetchEvents } = useEventsStore();
+  const { venues, loading: venuesLoading, fetchVenues } = useVenuesStore();
   const { addToFavorites, removeFromFavorites, isFavorite } =
     useFavoritesStore();
 
@@ -264,7 +256,12 @@ export const HomeScreen: React.FC = () => {
                     )}
                   </View>
                   <TouchableOpacity
-                    style={styles.favoriteButton}
+                    style={[
+                      styles.favoriteButton,
+                      {
+                        [isRTL ? "left" : "right"]: 8,
+                      },
+                    ]}
                     onPress={() => {
                       const venue = venues.find((v) => v.id === place.id);
                       if (venue) {
@@ -408,7 +405,12 @@ export const HomeScreen: React.FC = () => {
                 </Text>
               </View>
               <TouchableOpacity
-                style={styles.eventFavoriteButton}
+                style={[
+                  styles.eventFavoriteButton,
+                  {
+                    [isRTL ? "left" : "right"]: 8,
+                  },
+                ]}
                 onPress={() => {
                   const eventData = events.find((e) => e.id === event.id);
                   if (eventData) {

@@ -123,11 +123,19 @@ export const FavoritesScreen: React.FC = () => {
             </Text>
           ) : (
             favoriteVenues.map((venue) => (
-              <View key={venue.id} style={styles.favoriteItem}>
+              <View
+                key={venue.id}
+                style={[
+                  styles.favoriteItem,
+                  { flexDirection: isRTL ? "row-reverse" : "row" },
+                ]}
+              >
                 <View
                   style={[
                     styles.favoriteImage,
-                    { backgroundColor: colors.border },
+                    {
+                      backgroundColor: colors.border,
+                    },
                   ]}
                 >
                   {venue.data.images?.[0]?.url ? (
@@ -158,7 +166,7 @@ export const FavoritesScreen: React.FC = () => {
                     {venue.data.upcomingEvents?._total || 0} events
                   </Text>
                 </View>
-                <View style={styles.favoriteActions}>
+                <View style={[styles.favoriteActions]}>
                   <TouchableOpacity
                     style={styles.actionButton}
                     onPress={() => removeFromFavorites(venue.id, "venue")}
@@ -185,11 +193,19 @@ export const FavoritesScreen: React.FC = () => {
             </Text>
           ) : (
             favoriteEvents.map((event) => (
-              <View key={event.id} style={styles.favoriteItem}>
+              <View
+                key={event.id}
+                style={[
+                  styles.favoriteItem,
+                  { flexDirection: isRTL ? "row-reverse" : "row" },
+                ]}
+              >
                 <View
                   style={[
                     styles.favoriteImage,
-                    { backgroundColor: colors.border },
+                    {
+                      backgroundColor: colors.border,
+                    },
                   ]}
                 >
                   <Ionicons
@@ -212,7 +228,12 @@ export const FavoritesScreen: React.FC = () => {
                     {event.data._embedded?.venues?.[0]?.name || "Location TBD"}
                   </Text>
                 </View>
-                <View style={styles.favoriteActions}>
+                <View
+                  style={[
+                    styles.favoriteActions,
+                    { marginLeft: isRTL ? 0 : 10, marginRight: isRTL ? 10 : 0 },
+                  ]}
+                >
                   <TouchableOpacity
                     style={styles.actionButton}
                     onPress={() => removeFromFavorites(event.id, "event")}

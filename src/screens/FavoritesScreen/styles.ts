@@ -100,9 +100,10 @@ export const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 10,
-    marginRight: 15,
+    marginHorizontal: 15,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
   favoriteInfo: {
     flex: 1,

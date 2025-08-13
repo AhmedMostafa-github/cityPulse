@@ -83,14 +83,17 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
+    overflow: "hidden",
   },
   featuredTitle: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    textAlign: "left",
   },
   featuredSubtitle: {
     fontSize: 14,
+    textAlign: "left",
   },
   eventsContainer: {
     paddingHorizontal: 20,
@@ -104,7 +107,7 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
-    marginRight: 15,
+    marginHorizontal: 15,
     minWidth: 50,
   },
   eventDay: {
@@ -125,9 +128,11 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
     width: "90%",
+    textAlign: "left",
   },
   eventLocation: {
     fontSize: 14,
+    textAlign: "left",
   },
   loadingTextContainer: {
     marginTop: 8,
@@ -144,8 +149,7 @@ export const styles = StyleSheet.create({
   favoriteButton: {
     position: "absolute",
     top: 8,
-    right: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "rgba(149, 79, 101, 0.9)",
     borderRadius: 20,
     padding: 6,
     zIndex: 1,
@@ -154,7 +158,6 @@ export const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     right: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 16,
     padding: 4,
     zIndex: 1,
