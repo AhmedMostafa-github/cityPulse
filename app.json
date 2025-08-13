@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "City Pulse",
+    "slug": "city-pulse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FF6B6B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.citypulse.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FF6B6B"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.citypulse.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "description": "Discover your city with City Pulse - the ultimate urban exploration app",
+    "primaryColor": "#FF6B6B"
+  }
+}
