@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import MapView, { Marker } from "react-native-maps";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useFavoritesStore } from "../../stores/favoritesStore";
@@ -124,20 +125,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
     const title = getLocalizedName("name") || getLocalizedName("title");
     navigation.setOptions({
       title: title,
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginRight: 16 }}>
-          <TouchableOpacity onPress={handleShare} style={{ marginRight: 16 }}>
-            <Ionicons name="share-outline" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleFavoriteToggle}>
-            <Ionicons
-              name={isFavorite(item.id, type) ? "heart" : "heart-outline"}
-              size={24}
-              color={isFavorite(item.id, type) ? "#FF6B6B" : colors.text}
-            />
-          </TouchableOpacity>
-        </View>
-      ),
+      headerShown: false,
     });
   }, [navigation, item, type, isFavorite, colors, isRTL]);
 
@@ -155,63 +143,124 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
       showsVerticalScrollIndicator={false}
     >
       {/* Image Gallery */}
-      {hasImages && (
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: images[selectedImageIndex] }}
-            style={styles.mainImage}
-            resizeMode="cover"
-          />
-          {images.length > 1 && (
-            <View style={styles.imageIndicators}>
-              {images.map((_: any, index: number) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.indicator,
-                    {
-                      backgroundColor:
-                        index === selectedImageIndex
-                          ? colors.primary
-                          : colors.border,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          )}
-          {images.length > 1 && (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.thumbnailContainer}
-              contentContainerStyle={styles.thumbnailContent}
-            >
-              {images.map((image: any, index: number) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setSelectedImageIndex(index)}
-                  style={[
-                    styles.thumbnail,
-                    {
-                      borderColor:
-                        index === selectedImageIndex
-                          ? colors.primary
-                          : colors.border,
-                    },
-                  ]}
-                >
-                  <Image
-                    source={{ uri: image }}
-                    style={styles.thumbnailImage}
-                    resizeMode="cover"
+      <View style={styles.imageContainer}>
+        {hasImages ? (
+          <>
+            <Image
+              source={{ uri: images[selectedImageIndex] }}
+              style={styles.mainImage}
+              resizeMode="cover"
+            />
+            {images.length > 1 && (
+              <View style={styles.imageIndicators}>
+                {images.map((_: any, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.indicator,
+                      {
+                        backgroundColor:
+                          index === selectedImageIndex
+                            ? colors.primary
+                            : colors.border,
+                      },
+                    ]}
                   />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
+                ))}
+              </View>
+            )}
+            {images.length > 1 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.thumbnailContainer}
+                contentContainerStyle={styles.thumbnailContent}
+              >
+                {images.map((image: any, index: number) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setSelectedImageIndex(index)}
+                    style={[
+                      styles.thumbnail,
+                      {
+                        borderColor:
+                          index === selectedImageIndex
+                            ? colors.primary
+                            : colors.border,
+                      },
+                    ]}
+                  >
+                    <Image
+                      source={{ uri: image }}
+                      style={styles.thumbnailImage}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
+          </>
+        ) : (
+          <View
+            style={[
+              styles.mainImage,
+              {
+                backgroundColor: colors.border,
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            ]}
+          >
+            <Ionicons name="image" size={80} color={colors.textSecondary} />
+            <Text
+              style={[styles.defaultImageText, { color: colors.textSecondary }]}
+            >
+              {type === "venue" ? "No venue images" : "No event images"}
+            </Text>
+          </View>
+        )}
+
+        {/* Custom Header Overlay */}
+        <View style={styles.headerOverlay}>
+          {/* Back Button */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <View style={styles.backButtonBackground}>
+              <Ionicons
+                name={isRTL ? "arrow-forward" : "arrow-back"}
+                size={24}
+                color="white"
+              />
+            </View>
+          </TouchableOpacity>
+
+          {/* Action Buttons */}
+          <View style={styles.actionButtonsOverlay}>
+            <TouchableOpacity
+              style={styles.actionButtonOverlay}
+              onPress={handleShare}
+            >
+              <View style={styles.actionButtonBackground}>
+                <Ionicons name="share-outline" size={20} color="white" />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButtonOverlay}
+              onPress={handleFavoriteToggle}
+            >
+              <View style={styles.actionButtonBackground}>
+                <Ionicons
+                  name={isFavorite(item.id, type) ? "heart" : "heart-outline"}
+                  size={20}
+                  color={isFavorite(item.id, type) ? "#FF6B6B" : "white"}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      )}
+      </View>
 
       {/* Content */}
       <View style={styles.content}>
@@ -270,17 +319,29 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             {getLocalizedName("address") || getLocalizedName("location")}
           </Text>
 
-          {/* Location Display */}
+          {/* Map Display */}
           <View style={styles.mapContainer}>
-            <View style={styles.locationDisplay}>
-              <Ionicons name="location" size={24} color={colors.primary} />
-              <Text
-                style={[styles.locationText, { color: colors.textSecondary }]}
-              >
-                {coordinates.latitude.toFixed(4)},{" "}
-                {coordinates.longitude.toFixed(4)}
-              </Text>
-            </View>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              rotateEnabled={false}
+              pitchEnabled={false}
+            >
+              <Marker
+                coordinate={coordinates}
+                title={getLocalizedName("name") || getLocalizedName("title")}
+                description={
+                  getLocalizedName("address") || getLocalizedName("location")
+                }
+              />
+            </MapView>
           </View>
 
           {/* Action Buttons */}

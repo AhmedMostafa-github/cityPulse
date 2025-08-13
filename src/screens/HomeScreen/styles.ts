@@ -75,6 +75,7 @@ export const styles = StyleSheet.create({
   featuredCard: {
     width: 200,
     marginRight: 15,
+    flex: 1,
   },
   featuredImage: {
     width: "100%",
@@ -84,16 +85,25 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
     overflow: "hidden",
+    flexShrink: 0,
   },
   featuredTitle: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
     textAlign: "left",
+    flexShrink: 1,
   },
   featuredSubtitle: {
     fontSize: 14,
     textAlign: "left",
+    flexShrink: 1,
+  },
+  featuredCardContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: 8,
+    minHeight: 60,
   },
   eventsContainer: {
     paddingHorizontal: 20,

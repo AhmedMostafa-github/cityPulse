@@ -189,4 +189,46 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
   },
+  defaultImageText: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 8,
+    textAlign: "center",
+  },
+  headerOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 50,
+    paddingHorizontal: 16,
+    zIndex: 10,
+  },
+  backButton: {
+    zIndex: 11,
+  },
+  backButtonBackground: {
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 20,
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  actionButtonsOverlay: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  actionButtonOverlay: {
+    zIndex: 11,
+  },
+  actionButtonBackground: {
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 20,
+    padding: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

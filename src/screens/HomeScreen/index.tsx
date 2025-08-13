@@ -216,7 +216,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     color={colors.textSecondary}
                   />
                 </View>
-                <View style={styles.loadingTextContainer}>
+                <View style={styles.featuredCardContent}>
                   <View
                     style={[
                       styles.loadingText,
@@ -320,17 +320,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  <Text style={[styles.featuredTitle, { color: colors.text }]}>
-                    {getLocalizedName(place, "name")}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.featuredSubtitle,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
-                    {place.rating} events • {place.city}, {place.state}
-                  </Text>
+                  <View style={styles.featuredCardContent}>
+                    <Text
+                      style={[styles.featuredTitle, { color: colors.text }]}
+                      numberOfLines={2}
+                    >
+                      {getLocalizedName(place, "name")}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.featuredSubtitle,
+                        { color: colors.textSecondary },
+                      ]}
+                      numberOfLines={1}
+                    >
+                      {place.rating} events • {place.city}, {place.state}
+                    </Text>
+                  </View>
                 </ThemedCard>
               </TouchableOpacity>
             ))
