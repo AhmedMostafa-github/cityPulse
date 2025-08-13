@@ -25,7 +25,7 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     loadTheme();
@@ -37,6 +37,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
         setThemeState(savedTheme);
       }
+      // If no theme is saved, it will default to "dark" from the initial state
     } catch (error) {
       console.error("Error loading theme:", error);
     }
