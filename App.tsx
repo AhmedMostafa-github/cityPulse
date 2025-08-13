@@ -6,13 +6,15 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { I18nextProvider } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 // Import contexts
 import { ThemeProvider, useTheme } from "./src/contexts/ThemeContext";
 import { LanguageProvider, useLanguage } from "./src/contexts/LanguageContext";
+import { AuthProvider, useAuth } from "./src/contexts/AuthContext";
 
 // Import screens
+import { AuthScreen } from "./src/screens/AuthScreen";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { ExploreScreen } from "./src/screens/ExploreScreen";
 import { FavoritesScreen } from "./src/screens/FavoritesScreen";
@@ -117,12 +119,29 @@ const TabNavigator = () => {
 // RTL-aware wrapper component
 const AppContent = () => {
   const { isRTL } = useLanguage();
+  const { isAuthenticated, isLoading } = useAuth();
+  const { colors } = useTheme();
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: colors.background,
+        }}
+      >
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, direction: isRTL ? "rtl" : "ltr" }}>
       <NavigationContainer>
         <StatusBar style="auto" />
-        <TabNavigator />
+        {isAuthenticated ? <TabNavigator /> : <AuthScreen />}
       </NavigationContainer>
     </View>
   );
@@ -135,7 +154,9 @@ export default function App() {
       <I18nextProvider i18n={i18n}>
         <ThemeProvider>
           <LanguageProvider>
-            <AppContent />
+            <AuthProvider>
+              <AppContent />
+            </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
       </I18nextProvider>

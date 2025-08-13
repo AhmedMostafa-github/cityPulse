@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Language } from "../types";
 import { changeLanguage, getCurrentLanguage, isRTL } from "../utils/i18n";
 
@@ -31,44 +32,39 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   const [rtl, setRTL] = useState(false);
 
   useEffect(() => {
-    const initializeLanguage = async () => {
-      try {
-        // Set default values immediately
+    loadSavedLanguage();
+  }, []);
+
+  const loadSavedLanguage = async () => {
+    try {
+      const savedLanguage = await AsyncStorage.getItem("user-language");
+      if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar")) {
+        setLanguageState(savedLanguage);
+        setRTL(savedLanguage === "ar");
+        await changeLanguage(savedLanguage);
+      } else {
+        // Set default values
         setLanguageState("en");
         setRTL(false);
-
-        // Try to get the actual language
-        const currentLang = getCurrentLanguage();
-        setLanguageState(currentLang);
-        setRTL(isRTL());
-      } catch (error) {
-        console.error("Error initializing language:", error);
-        // Keep default values
+        await changeLanguage("en");
       }
-    };
-
-    // Initialize immediately
-    initializeLanguage();
-
-    // Set up a timeout to check again after a short delay
-    const timer = setTimeout(() => {
-      try {
-        const currentLang = getCurrentLanguage();
-        setLanguageState(currentLang);
-        setRTL(isRTL());
-      } catch (error) {
-        console.error("Error in delayed language initialization:", error);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    } catch (error) {
+      console.error("Error loading saved language:", error);
+      // Set default values
+      setLanguageState("en");
+      setRTL(false);
+      await changeLanguage("en");
+    }
+  };
 
   const handleLanguageChange = async (newLanguage: Language) => {
     try {
       await changeLanguage(newLanguage);
       setLanguageState(newLanguage);
-      setRTL(isRTL());
+      setRTL(newLanguage === "ar");
+
+      // Save language preference
+      await AsyncStorage.setItem("user-language", newLanguage);
     } catch (error) {
       console.error("Error changing language:", error);
     }

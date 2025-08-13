@@ -13,9 +13,11 @@ A modern, feature-rich React Native application for discovering places and event
 
 ### Authentication & User Management
 
-- User authentication system
-- User preferences management
-- Favorites system for places and events
+- **Complete Authentication System**: Signup and login with AsyncStorage persistence
+- **Credential Management**: Secure storage of user credentials
+- **Session Persistence**: Users stay logged in until they sign out
+- **User Preferences**: Theme and language preferences saved per user
+- **Favorites System**: Personalized favorites for places and events
 
 ### Navigation & UI
 
@@ -32,15 +34,19 @@ A modern, feature-rich React Native application for discovering places and event
 src/
 ├── components/          # Reusable UI components
 │   ├── ThemedButton.tsx
-│   └── ThemedCard.tsx
+│   ├── ThemedCard.tsx
+│   └── ValidatedInput.tsx
 ├── contexts/           # React Context providers
 │   ├── ThemeContext.tsx
-│   └── LanguageContext.tsx
+│   ├── LanguageContext.tsx
+│   └── AuthContext.tsx
 ├── hooks/              # Custom React hooks
 │   ├── useAuth.ts
 │   ├── useFavorites.ts
-│   └── useOfflineCache.ts
+│   ├── useOfflineCache.ts
+│   └── useAuthForm.ts
 ├── screens/            # Screen components
+│   ├── AuthScreen.tsx
 │   ├── HomeScreen.tsx
 │   ├── ExploreScreen.tsx
 │   ├── FavoritesScreen.tsx
@@ -49,7 +55,8 @@ src/
 ├── types/              # TypeScript type definitions
 │   └── index.ts
 ├── utils/              # Utility functions
-│   └── i18n.ts
+│   ├── i18n.ts
+│   └── validation.ts
 ├── constants/          # App constants
 │   └── themes.ts
 └── locales/            # Internationalization files
@@ -64,18 +71,21 @@ src/
 #### Context Providers
 
 - **ThemeContext**: Manages light/dark theme switching with AsyncStorage persistence
-- **LanguageContext**: Handles language switching and RTL layout support
+- **LanguageContext**: Handles language switching and RTL layout support with AsyncStorage persistence
+- **AuthContext**: Complete authentication system with signup, login, logout, and credential persistence
 
 #### Custom Hooks
 
-- **useAuth**: User authentication and management
+- **useAuth**: User authentication and management (now part of AuthContext)
 - **useFavorites**: Favorites system for places and events
 - **useOfflineCache**: Offline caching with network status monitoring
+- **useAuthForm**: Form state management and validation for authentication
 
 #### UI Components
 
 - **ThemedButton**: Versatile button component with multiple variants
 - **ThemedCard**: Card component with theme-aware styling
+- **ValidatedInput**: Form input component with built-in validation and error display
 
 ## 🛠️ Technical Stack
 
@@ -87,6 +97,14 @@ src/
 - **Expo**: Development platform
 
 ## 📱 Screens
+
+### Authentication Screen
+
+- **Signup & Login**: Complete user registration and authentication
+- **Language Switching**: Change language directly from auth screen
+- **Form Validation**: Real-time validation with error handling
+- **Persistent Sessions**: Users stay logged in until logout
+- **Secure Storage**: Credentials stored securely in AsyncStorage
 
 ### Home Screen
 

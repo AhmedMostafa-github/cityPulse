@@ -75,6 +75,35 @@ export interface User {
   };
 }
 
+export interface AuthCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignupData extends AuthCredentials {
+  name: string;
+  confirmPassword: string;
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  preferences: {
+    theme: Theme;
+    language: Language;
+    notifications: boolean;
+  };
+}
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: AuthUser | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
 export interface SearchFilters {
   category?: string;
   rating?: number;
