@@ -1,6 +1,5 @@
 import { Place, Event } from "../types";
 
-// Root Stack Param List for type safety
 export type RootStackParamList = {
   HomeMain: undefined;
   ExploreMain: undefined;
@@ -13,15 +12,12 @@ export type RootStackParamList = {
   };
 };
 
-// Tab Navigator Param List
 export type TabParamList = {
   Home: undefined;
   Explore: undefined;
   Favorites: undefined;
   Profile: undefined;
 };
-
-// Navigation prop types
 export interface DetailScreenProps {
   route: {
     params: {

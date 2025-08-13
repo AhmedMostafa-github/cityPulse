@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
   Image,
   RefreshControl,
   TextInput,
@@ -23,7 +22,7 @@ import { HomeScreenProps } from "../../navigation/types";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
   const { isRTL } = useLanguage();
   const { events, loading, fetchEvents } = useEventsStore();
   const { venues, loading: venuesLoading, fetchVenues } = useVenuesStore();
@@ -33,13 +32,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch events and venues when component mounts
   useEffect(() => {
     fetchEvents();
     fetchVenues();
   }, [fetchEvents, fetchVenues]);
 
-  // Handle pull-to-refresh
   const onRefresh = async () => {
     setRefreshing(true);
     try {
@@ -51,7 +48,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
-  // Filter events based on search query
   const filteredEvents = events.filter((event) => {
     if (!searchQuery.trim()) return true;
 
@@ -67,7 +63,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     );
   });
 
-  // Filter venues based on search query
   const filteredVenues = venues.filter((venue) => {
     if (!searchQuery.trim()) return true;
 
@@ -85,7 +80,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     );
   });
 
-  // Safe fallback if translations aren't ready
   const safeTranslate = (key: string, fallback: string) => {
     try {
       return t(key) || fallback;
@@ -120,7 +114,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const featuredPlaces = filteredVenues.slice(0, 5).map((venue) => ({
     id: venue.id,
     name: venue.name,
-    nameAr: venue.name, // Using English name as fallback for Arabic
+    nameAr: venue.name,
     rating: venue.upcomingEvents._total || 0,
     category: venue.type,
     categoryAr: venue.type === "venue" ? "مكان" : venue.type,
@@ -140,7 +134,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return {
       id: event.id,
       title: event.name,
-      titleAr: event.name, // Using English name as fallback for Arabic
+      titleAr: event.name,
       date: day,
       month: month,
       monthAr: monthAr,
@@ -160,12 +154,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       }
       return (item as any)[defaultField];
     } catch (error) {
-      // Fallback to default field if there's an error
       return (item as any)[field] || "";
     }
   };
-
-  // Safe render with fallback
   if (!colors) {
     return (
       <View style={styles.fallbackContainer}>
@@ -197,10 +188,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
       <TouchableOpacity
         style={[styles.searchBar, { backgroundColor: colors.surface }]}
-        onPress={() => {
-          // Focus the search input when the search bar is tapped
-          // This will be handled by the TextInput itself
-        }}
+        onPress={() => {}}
       >
         <Ionicons name="search" size={20} color={colors.textSecondary} />
         <TextInput
@@ -230,7 +218,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
       </TouchableOpacity>
 
-      {/* Show search results count if searching */}
       {searchQuery.trim().length > 0 && (
         <View style={styles.searchResultsHeader}>
           <Text
@@ -244,7 +231,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Only show categories when not searching */}
       {!searchQuery.trim() && (
         <View style={styles.categoriesContainer}>
           <Text
@@ -288,7 +274,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Show venues section with conditional title */}
       {(filteredVenues.length > 0 || venuesLoading) && (
         <View style={styles.featuredContainer}>
           <Text
@@ -309,7 +294,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             contentContainerStyle={styles.featuredScrollContainer}
           >
             {venuesLoading ? (
-              // Show multiple loading cards
               Array.from({ length: 5 }).map((_, index) => (
                 <ThemedCard
                   key={`loading-${index}`}
@@ -349,6 +333,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   key={place.id}
                   onPress={() => {
                     const venue = venues.find((v) => v.id === place.id);
+
                     if (venue) {
                       navigation.navigate("Detail", {
                         item: {
@@ -363,8 +348,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                           address: `${venue.city.name}, ${venue.state.name}`,
                           addressAr: `${venue.city.name}, ${venue.state.name}`,
                           coordinates: {
-                            latitude: 24.7136, // Default coordinates
-                            longitude: 46.6753,
+                            latitude: venue.location.latitude,
+                            longitude: venue.location.longitude,
                           },
                           images: venue.images?.map((img) => img.url) || [],
                           isOpen: true,
@@ -479,7 +464,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Show events section with conditional title */}
       {(filteredEvents.length > 0 || loading) && (
         <View style={styles.eventsContainer}>
           <Text
@@ -495,7 +479,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               : safeTranslate("home.upcomingEvents", "Upcoming Events")}
           </Text>
           {loading ? (
-            // Show multiple loading cards for events
             Array.from({ length: 3 }).map((_, index) => (
               <ThemedCard
                 key={`event-loading-${index}`}
@@ -574,6 +557,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                         price: "Free",
                         images: eventData.images?.map((img) => img.url) || [],
                         isFavorite: isFavorite(eventData.id, "event"),
+                        coordinates: {
+                          latitude:
+                            eventData?._embedded?.venues?.[0]?.location
+                              ?.latitude || 24.7136,
+                          longitude:
+                            eventData?._embedded?.venues?.[0]?.location
+                              ?.longitude || 46.6753,
+                        },
                       },
                       type: "event",
                     });

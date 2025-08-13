@@ -7,7 +7,6 @@ export const config = {
   },
 } as const;
 
-// Validate required environment variables
 if (!API_BASE_URL) {
   console.warn("API_BASE_URL is not set in environment variables");
 }

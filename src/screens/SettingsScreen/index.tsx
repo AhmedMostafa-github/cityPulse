@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -55,7 +49,6 @@ export const SettingsScreen: React.FC = () => {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        {/* Back Button */}
         <TouchableOpacity
           style={[
             styles.backButton,
@@ -78,7 +71,6 @@ export const SettingsScreen: React.FC = () => {
         </Text>
       </View>
 
-      {/* Language Settings */}
       <ThemedCard style={styles.settingsCard}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
           {t("settings.language", "Language")}
@@ -120,7 +112,6 @@ export const SettingsScreen: React.FC = () => {
         </View>
       </ThemedCard>
 
-      {/* Version Information */}
       <ThemedCard style={styles.settingsCard}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
           {t("settings.about", "About")}

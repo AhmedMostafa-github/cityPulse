@@ -15,7 +15,7 @@ interface UseOfflineCacheReturn {
   isCacheValid: (cache: OfflineCache) => boolean;
 }
 
-const CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000;
 const CACHE_KEY = "offline-search-cache";
 
 export const useOfflineCache = (): UseOfflineCacheReturn => {
@@ -31,10 +31,7 @@ export const useOfflineCache = (): UseOfflineCacheReturn => {
       }
     };
 
-    // Check initial network status
     checkNetworkStatus();
-
-    // Set up interval to check network status
     const interval = setInterval(checkNetworkStatus, 5000);
 
     return () => clearInterval(interval);

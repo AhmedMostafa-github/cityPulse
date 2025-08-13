@@ -3,15 +3,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
 
-// Import contexts
 import { useTheme } from "../contexts/ThemeContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 
-// Import screens
 import { AuthScreen } from "../screens/AuthScreen";
 
-// Import navigation components
 import { TabNavigator } from "./tabs";
 
 export const AppNavigator = () => {
@@ -44,6 +41,5 @@ export const AppNavigator = () => {
   );
 };
 
-// Export individual components for use in other files
 export { HomeStack, ExploreStack, FavoritesStack, ProfileStack } from "./stack";
 export { TabNavigator } from "./tabs";

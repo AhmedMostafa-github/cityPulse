@@ -43,7 +43,6 @@ export const useAuthForm = (): UseAuthFormReturn => {
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    // Clear validation error when user starts typing
     if (validationErrors[field]) {
       setValidationErrors((prev) => ({ ...prev, [field]: "" }));
     }

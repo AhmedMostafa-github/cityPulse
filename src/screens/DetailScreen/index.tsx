@@ -5,7 +5,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Dimensions,
   Alert,
   Linking,
 } from "react-native";
@@ -20,40 +19,34 @@ import { Place, Event } from "../../types";
 import { DetailScreenProps } from "../../navigation/types";
 import { styles } from "./styles";
 
-const { width } = Dimensions.get("window");
-
 export const DetailScreen: React.FC<DetailScreenProps> = ({
   route,
   navigation,
 }) => {
   const { item, type } = route.params;
   const { t } = useTranslation();
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
   const { isRTL } = useLanguage();
   const { addToFavorites, removeFromFavorites, isFavorite } =
     useFavoritesStore();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  // Get images array - handle both Place and Event types
   const images = "images" in item ? item.images : [];
   const hasImages = images.length > 0;
 
-  // Get coordinates for map
   const getCoordinates = () => {
-    if (type === "venue" && "coordinates" in item) {
+    if ("coordinates" in item) {
       return item.coordinates;
     }
-    // For events, we'll use a default location or extract from location string
     return {
-      latitude: 24.7136, // Default to Riyadh coordinates
+      latitude: 24.7136,
       longitude: 46.6753,
     };
   };
 
   const coordinates = getCoordinates();
 
-  // Get localized name
   const getLocalizedName = (field: string) => {
     const arField = `${field}Ar` as keyof typeof item;
     const defaultField = field as keyof typeof item;
@@ -64,7 +57,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
     return (item as any)[defaultField];
   };
 
-  // Handle favorite toggle
   const handleFavoriteToggle = () => {
     if (isFavorite(item.id, type)) {
       removeFromFavorites(item.id, type);
@@ -73,7 +65,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
     }
   };
 
-  // Handle share
   const handleShare = () => {
     const title = getLocalizedName("name") || getLocalizedName("title");
     const description = getLocalizedName("description");
@@ -96,7 +87,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
     );
   };
 
-  // Handle directions
   const handleDirections = () => {
     const { latitude, longitude } = coordinates;
     const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
@@ -113,7 +103,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
     });
   };
 
-  // Handle call (for venues)
   const handleCall = () => {
     if (type === "venue" && "phone" in item && (item as any).phone) {
       Linking.openURL(`tel:${(item as any).phone}`);
@@ -121,7 +110,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
   };
 
   useEffect(() => {
-    // Set navigation title
     const title = getLocalizedName("name") || getLocalizedName("title");
     navigation.setOptions({
       title: title,
@@ -142,7 +130,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
       style={[styles.container, { backgroundColor: colors.background }]}
       showsVerticalScrollIndicator={false}
     >
-      {/* Image Gallery */}
       <View style={styles.imageContainer}>
         {hasImages ? (
           <>
@@ -220,9 +207,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           </View>
         )}
 
-        {/* Custom Header Overlay */}
         <View style={styles.headerOverlay}>
-          {/* Back Button */}
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -236,7 +221,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             </View>
           </TouchableOpacity>
 
-          {/* Action Buttons */}
           <View style={styles.actionButtonsOverlay}>
             <TouchableOpacity
               style={styles.actionButtonOverlay}
@@ -262,9 +246,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
         </View>
       </View>
 
-      {/* Content */}
       <View style={styles.content}>
-        {/* Title and Rating */}
         <View style={styles.headerSection}>
           <Text style={[styles.title, { color: colors.text }]}>
             {getLocalizedName("name") || getLocalizedName("title")}
@@ -279,7 +261,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           )}
         </View>
 
-        {/* Category and Price */}
         <View style={styles.metaSection}>
           {item.category && (
             <View
@@ -300,7 +281,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           )}
         </View>
 
-        {/* Description */}
         <ThemedCard style={styles.descriptionCard}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             {t("detail.description", "Description")}
@@ -310,7 +290,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           </Text>
         </ThemedCard>
 
-        {/* Location Information */}
         <ThemedCard style={styles.locationCard}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             {t("detail.location", "Location")}
@@ -319,7 +298,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             {getLocalizedName("address") || getLocalizedName("location")}
           </Text>
 
-          {/* Map Display */}
           <View style={styles.mapContainer}>
             <MapView
               style={styles.map}
@@ -344,7 +322,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
             </MapView>
           </View>
 
-          {/* Action Buttons */}
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: colors.primary }]}
@@ -373,7 +350,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           </View>
         </ThemedCard>
 
-        {/* Additional Information */}
         {type === "event" && (
           <ThemedCard style={styles.eventInfoCard}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
@@ -398,7 +374,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           </ThemedCard>
         )}
 
-        {/* Tags */}
         {type === "venue" &&
           "tags" in item &&
           item.tags &&

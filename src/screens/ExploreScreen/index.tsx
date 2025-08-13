@@ -27,12 +27,10 @@ export const ExploreScreen: React.FC = () => {
   ];
 
   const handleFilterPress = (filterKey: string) => {
-    // Handle filter selection
     console.log("Filter selected:", filterKey);
   };
 
   const handleMapPress = () => {
-    // Handle map interaction
     console.log("Map pressed");
   };
 

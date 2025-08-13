@@ -136,7 +136,6 @@ export const ProfileScreen: React.FC = () => {
         </View>
       </ThemedCard>
 
-      {/* Theme Toggle Section */}
       <ThemedCard style={styles.themeContainer}>
         <View style={styles.themeHeader}>
           <View style={styles.themeHeaderLeft}>

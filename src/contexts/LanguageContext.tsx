@@ -43,14 +43,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         setRTL(savedLanguage === "ar");
         await changeLanguage(savedLanguage);
       } else {
-        // Set default values
         setLanguageState("en");
         setRTL(false);
         await changeLanguage("en");
       }
     } catch (error) {
       console.error("Error loading saved language:", error);
-      // Set default values
       setLanguageState("en");
       setRTL(false);
       await changeLanguage("en");
@@ -63,7 +61,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       setLanguageState(newLanguage);
       setRTL(newLanguage === "ar");
 
-      // Save language preference
       await AsyncStorage.setItem("user-language", newLanguage);
     } catch (error) {
       console.error("Error changing language:", error);

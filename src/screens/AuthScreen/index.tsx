@@ -18,7 +18,7 @@ import { styles } from "./styles";
 
 export const AuthScreen: React.FC = () => {
   const { t } = useTranslation();
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
   const { language, changeLanguage } = useLanguage();
   const { signup, login, isLoading, error, clearError } = useAuth();
   const {
@@ -111,7 +111,6 @@ export const AuthScreen: React.FC = () => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Language Toggle */}
         <TouchableOpacity
           style={[styles.languageToggle, { borderColor: colors.border }]}
           onPress={handleLanguageToggle}
@@ -121,7 +120,6 @@ export const AuthScreen: React.FC = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Header */}
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>
             {t("auth.title")}
@@ -131,7 +129,6 @@ export const AuthScreen: React.FC = () => {
           </Text>
         </View>
 
-        {/* Form */}
         <View style={styles.form}>
           {isSignup && (
             <ValidatedInput
@@ -176,7 +173,6 @@ export const AuthScreen: React.FC = () => {
             />
           )}
 
-          {/* Submit Button */}
           <TouchableOpacity
             style={[
               styles.submitButton,
@@ -196,7 +192,6 @@ export const AuthScreen: React.FC = () => {
             </Text>
           </TouchableOpacity>
 
-          {/* Mode Toggle */}
           <TouchableOpacity style={styles.modeToggle} onPress={toggleMode}>
             <Text style={[styles.modeToggleText, { color: colors.primary }]}>
               {isSignup ? t("auth.switchToLogin") : t("auth.switchToSignup")}

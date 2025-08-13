@@ -6,7 +6,7 @@ export interface FavoriteItem {
   id: string;
   name: string;
   category: "event" | "venue";
-  data: any; // Store the full item data
+  data: any;
   addedAt: string;
 }
 

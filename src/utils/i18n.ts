@@ -3,11 +3,8 @@ import { initReactI18next } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Language } from "../types";
 
-// Import translations
 import enTranslation from "../locales/en/translation.json";
 import arTranslation from "../locales/ar/translation.json";
-
-// Initialize i18n with a simpler configuration
 i18n.use(initReactI18next).init({
   resources: {
     en: {
@@ -17,7 +14,7 @@ i18n.use(initReactI18next).init({
       translation: arTranslation,
     },
   },
-  lng: "en", // Default language
+  lng: "en",
   fallbackLng: "en",
   debug: false,
   interpolation: {
@@ -28,7 +25,6 @@ i18n.use(initReactI18next).init({
   },
 });
 
-// Load saved language after initialization
 const loadSavedLanguage = async () => {
   try {
     const savedLanguage = await AsyncStorage.getItem("user-language");
@@ -39,8 +35,6 @@ const loadSavedLanguage = async () => {
     console.error("Error loading saved language:", error);
   }
 };
-
-// Load saved language
 loadSavedLanguage();
 
 export const changeLanguage = async (language: Language) => {

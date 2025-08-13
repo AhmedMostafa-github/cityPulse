@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../contexts/ThemeContext";
 import { useLanguage } from "../contexts/LanguageContext";
 
-// Import stack navigators
 import { HomeStack } from "./stack";
 import { ExploreStack } from "./stack";
 import { FavoritesStack } from "./stack";

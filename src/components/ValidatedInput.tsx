@@ -55,7 +55,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
               borderWidth: 1,
               borderRadius: 12,
               paddingHorizontal: 16,
-              paddingRight: isPassword ? 56 : 16, // Extra padding for password icon
+              paddingRight: isPassword ? 56 : 16,
               fontSize: 16,
               backgroundColor: colors.surface,
               borderColor: hasError ? colors.error : colors.border,

@@ -73,7 +73,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-      // Validate passwords match
       if (data.password !== data.confirmPassword) {
         setState((prev) => ({
           ...prev,
@@ -83,7 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      // Check if user already exists
       const existingUsers = await AsyncStorage.getItem("users");
       const users = existingUsers ? JSON.parse(existingUsers) : [];
 
@@ -97,7 +95,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      // Create new user
       const newUser: AuthUser = {
         id: Date.now().toString(),
         name: data.name,
@@ -109,19 +106,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
       };
 
-      // Save user data
       users.push({
         email: data.email,
-        password: data.password, // In a real app, this should be hashed
+        password: data.password,
         userData: newUser,
       });
 
       await AsyncStorage.setItem("users", JSON.stringify(users));
 
-      // Generate simple token (in real app, use JWT)
       const token = `token_${Date.now()}_${Math.random()}`;
 
-      // Save auth data
       await AsyncStorage.setItem("user-data", JSON.stringify(newUser));
       await AsyncStorage.setItem("auth-token", token);
 
@@ -148,11 +142,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-      // Get stored users
       const existingUsers = await AsyncStorage.getItem("users");
       const users = existingUsers ? JSON.parse(existingUsers) : [];
 
-      // Find user
       const user = users.find(
         (u: any) =>
           u.email === credentials.email && u.password === credentials.password
@@ -167,10 +159,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      // Generate new token
       const token = `token_${Date.now()}_${Math.random()}`;
 
-      // Save auth data
       await AsyncStorage.setItem("user-data", JSON.stringify(user.userData));
       await AsyncStorage.setItem("auth-token", token);
 
