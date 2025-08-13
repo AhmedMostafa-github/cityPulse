@@ -124,8 +124,39 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    width: "90%",
   },
   eventLocation: {
     fontSize: 14,
+  },
+  loadingTextContainer: {
+    marginTop: 8,
+  },
+  loadingText: {
+    height: 12,
+    borderRadius: 6,
+    marginBottom: 4,
+    width: "100%",
+  },
+  featuredCardHeader: {
+    position: "relative",
+  },
+  favoriteButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 20,
+    padding: 6,
+    zIndex: 1,
+  },
+  eventFavoriteButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 16,
+    padding: 4,
+    zIndex: 1,
   },
 });

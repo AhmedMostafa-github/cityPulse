@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { useFavorites } from "../../hooks/useFavorites";
+import { useFavoritesStore } from "../../stores/favoritesStore";
 import { ThemedButton } from "../../components/ThemedButton";
 import { styles } from "./styles";
 
@@ -12,7 +12,9 @@ export const FavoritesScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { isRTL } = useLanguage();
-  const { favoritePlaces, favoriteEvents } = useFavorites();
+  const { getFavoritesByCategory, removeFromFavorites } = useFavoritesStore();
+  const favoriteVenues = getFavoritesByCategory("venue");
+  const favoriteEvents = getFavoritesByCategory("event");
   const [activeTab, setActiveTab] = useState<"places" | "events">("places");
 
   const getLocalizedName = (item: any, field: string) => {
@@ -113,30 +115,38 @@ export const FavoritesScreen: React.FC = () => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             {t("favorites.places")}
           </Text>
-          {favoritePlaces.length === 0 ? (
+          {favoriteVenues.length === 0 ? (
             <Text
               style={[styles.emptySubtitle, { color: colors.textSecondary }]}
             >
               {t("favorites.emptySubtitle")}
             </Text>
           ) : (
-            favoritePlaces.map((place) => (
-              <View key={place.id} style={styles.favoriteItem}>
+            favoriteVenues.map((venue) => (
+              <View key={venue.id} style={styles.favoriteItem}>
                 <View
                   style={[
                     styles.favoriteImage,
                     { backgroundColor: colors.border },
                   ]}
                 >
-                  <Ionicons
-                    name="image"
-                    size={30}
-                    color={colors.textSecondary}
-                  />
+                  {venue.data.images?.[0]?.url ? (
+                    <Image
+                      source={{ uri: venue.data.images[0].url }}
+                      style={styles.favoriteImage}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Ionicons
+                      name="image"
+                      size={30}
+                      color={colors.textSecondary}
+                    />
+                  )}
                 </View>
                 <View style={styles.favoriteInfo}>
                   <Text style={[styles.favoriteTitle, { color: colors.text }]}>
-                    {getLocalizedName(place, "name")}
+                    {venue.name}
                   </Text>
                   <Text
                     style={[
@@ -144,11 +154,15 @@ export const FavoritesScreen: React.FC = () => {
                       { color: colors.textSecondary },
                     ]}
                   >
-                    {place.category} • {place.rating} ★
+                    {venue.data.city?.name}, {venue.data.state?.name} •{" "}
+                    {venue.data.upcomingEvents?._total || 0} events
                   </Text>
                 </View>
                 <View style={styles.favoriteActions}>
-                  <TouchableOpacity style={styles.actionButton}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => removeFromFavorites(venue.id, "venue")}
+                  >
                     <Ionicons name="heart" size={20} color={colors.primary} />
                   </TouchableOpacity>
                 </View>
@@ -186,7 +200,7 @@ export const FavoritesScreen: React.FC = () => {
                 </View>
                 <View style={styles.favoriteInfo}>
                   <Text style={[styles.favoriteTitle, { color: colors.text }]}>
-                    {getLocalizedName(event, "title")}
+                    {event.name}
                   </Text>
                   <Text
                     style={[
@@ -194,11 +208,15 @@ export const FavoritesScreen: React.FC = () => {
                       { color: colors.textSecondary },
                     ]}
                   >
-                    {event.date} • {event.location}
+                    {event.data.dates?.start?.localDate} •{" "}
+                    {event.data._embedded?.venues?.[0]?.name || "Location TBD"}
                   </Text>
                 </View>
                 <View style={styles.favoriteActions}>
-                  <TouchableOpacity style={styles.actionButton}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => removeFromFavorites(event.id, "event")}
+                  >
                     <Ionicons name="heart" size={20} color={colors.primary} />
                   </TouchableOpacity>
                 </View>
@@ -223,7 +241,7 @@ export const FavoritesScreen: React.FC = () => {
         </Text>
       </View>
 
-      {favoritePlaces.length === 0 && favoriteEvents.length === 0 ? (
+      {favoriteVenues.length === 0 && favoriteEvents.length === 0 ? (
         renderEmptyState()
       ) : (
         <>

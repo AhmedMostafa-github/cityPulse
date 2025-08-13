@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -14,6 +15,8 @@ import { ThemedCard } from "../../components/ThemedCard";
 import { ThemedButton } from "../../components/ThemedButton";
 import { mockPlaces, mockEvents } from "../../services/mockData";
 import { useEventsStore } from "../../stores/eventsStore";
+import { useVenuesStore } from "../../stores/venuesStore";
+import { useFavoritesStore } from "../../stores/favoritesStore";
 import { styles } from "./styles";
 
 const { width } = Dimensions.get("window");
@@ -23,26 +26,20 @@ export const HomeScreen: React.FC = () => {
   const { colors, theme } = useTheme();
   const { isRTL } = useLanguage();
   const { events, loading, error, fetchEvents } = useEventsStore();
+  const {
+    venues,
+    loading: venuesLoading,
+    error: venuesError,
+    fetchVenues,
+  } = useVenuesStore();
+  const { addToFavorites, removeFromFavorites, isFavorite } =
+    useFavoritesStore();
 
-  // Fetch events when component mounts
+  // Fetch events and venues when component mounts
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
-
-  // Console log the events data
-  useEffect(() => {
-    console.log("Events data from API:", events);
-    console.log("Events count:", events.length);
-    if (events.length > 0) {
-      console.log("First event:", events[0]);
-      console.log("Event name:", events[0].name);
-      console.log("Event date:", events[0].dates.start.localDate);
-      console.log("Event time:", events[0].dates.start.localTime);
-    }
-    if (error) {
-      console.error("Error fetching events:", error);
-    }
-  }, [events, error]);
+    fetchVenues();
+  }, [fetchEvents, fetchVenues]);
 
   // Safe fallback if translations aren't ready
   const safeTranslate = (key: string, fallback: string) => {
@@ -76,22 +73,16 @@ export const HomeScreen: React.FC = () => {
     },
   ];
 
-  const featuredPlaces = mockPlaces.slice(0, 3).map((place) => ({
-    id: place.id,
-    name: place.name,
-    nameAr: place.nameAr,
-    rating: place.rating,
-    category: place.category,
-    categoryAr:
-      place.category === "cafe"
-        ? "مقهى"
-        : place.category === "outdoor"
-        ? "مساحة خارجية"
-        : place.category === "cultural"
-        ? "ثقافي"
-        : place.category === "restaurant"
-        ? "مطعم"
-        : place.category,
+  const featuredPlaces = venues.slice(0, 5).map((venue) => ({
+    id: venue.id,
+    name: venue.name,
+    nameAr: venue.name, // Using English name as fallback for Arabic
+    rating: venue.upcomingEvents._total || 0,
+    category: venue.type,
+    categoryAr: venue.type === "venue" ? "مكان" : venue.type,
+    city: venue.city.name,
+    state: venue.state.name,
+    imageUrl: venue.images?.[0]?.url || null,
   }));
 
   const upcomingEvents = events.slice(0, 12).map((event) => {
@@ -216,8 +207,105 @@ export const HomeScreen: React.FC = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.featuredScrollContainer}
         >
-          {featuredPlaces.map((place) => (
-            <ThemedCard key={place.id} style={styles.featuredCard}>
+          {venuesLoading ? (
+            // Show multiple loading cards
+            Array.from({ length: 5 }).map((_, index) => (
+              <ThemedCard key={`loading-${index}`} style={styles.featuredCard}>
+                <View
+                  style={[
+                    styles.featuredImage,
+                    { backgroundColor: colors.border },
+                  ]}
+                >
+                  <Ionicons
+                    name="image"
+                    size={40}
+                    color={colors.textSecondary}
+                  />
+                </View>
+                <View style={styles.loadingTextContainer}>
+                  <View
+                    style={[
+                      styles.loadingText,
+                      { backgroundColor: colors.border },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.loadingText,
+                      { backgroundColor: colors.border, width: "60%" },
+                    ]}
+                  />
+                </View>
+              </ThemedCard>
+            ))
+          ) : featuredPlaces.length > 0 ? (
+            featuredPlaces.map((place) => (
+              <ThemedCard key={place.id} style={styles.featuredCard}>
+                <View style={styles.featuredCardHeader}>
+                  <View
+                    style={[
+                      styles.featuredImage,
+                      { backgroundColor: colors.border },
+                    ]}
+                  >
+                    {place.imageUrl ? (
+                      <Image
+                        source={{ uri: place.imageUrl }}
+                        style={styles.featuredImage}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Ionicons
+                        name="image"
+                        size={40}
+                        color={colors.textSecondary}
+                      />
+                    )}
+                  </View>
+                  <TouchableOpacity
+                    style={styles.favoriteButton}
+                    onPress={() => {
+                      const venue = venues.find((v) => v.id === place.id);
+                      if (venue) {
+                        if (isFavorite(place.id, "venue")) {
+                          removeFromFavorites(place.id, "venue");
+                        } else {
+                          addToFavorites(venue, "venue");
+                        }
+                      }
+                    }}
+                  >
+                    <Ionicons
+                      name={
+                        isFavorite(place.id, "venue")
+                          ? "heart"
+                          : "heart-outline"
+                      }
+                      size={20}
+                      color={
+                        isFavorite(place.id, "venue")
+                          ? "#FF6B6B"
+                          : colors.textSecondary
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={[styles.featuredTitle, { color: colors.text }]}>
+                  {getLocalizedName(place, "name")}
+                </Text>
+                <Text
+                  style={[
+                    styles.featuredSubtitle,
+                    { color: colors.textSecondary },
+                  ]}
+                >
+                  {place.rating} events • {place.city}, {place.state}
+                </Text>
+              </ThemedCard>
+            ))
+          ) : (
+            <ThemedCard style={styles.featuredCard}>
               <View
                 style={[
                   styles.featuredImage,
@@ -226,19 +314,13 @@ export const HomeScreen: React.FC = () => {
               >
                 <Ionicons name="image" size={40} color={colors.textSecondary} />
               </View>
-              <Text style={[styles.featuredTitle, { color: colors.text }]}>
-                {getLocalizedName(place, "name")}
-              </Text>
               <Text
-                style={[
-                  styles.featuredSubtitle,
-                  { color: colors.textSecondary },
-                ]}
+                style={[styles.featuredTitle, { color: colors.textSecondary }]}
               >
-                {place.rating} ★ • {getLocalizedName(place, "category")}
+                No venues available
               </Text>
             </ThemedCard>
-          ))}
+          )}
         </ScrollView>
       </View>
 
@@ -254,11 +336,53 @@ export const HomeScreen: React.FC = () => {
           {safeTranslate("home.upcomingEvents", "Upcoming Events")}
         </Text>
         {loading ? (
-          <ThemedCard style={styles.eventCard}>
-            <Text style={[styles.eventTitle, { color: colors.textSecondary }]}>
-              Loading events...
-            </Text>
-          </ThemedCard>
+          // Show multiple loading cards for events
+          Array.from({ length: 3 }).map((_, index) => (
+            <ThemedCard key={`event-loading-${index}`} style={styles.eventCard}>
+              <View
+                style={[styles.eventDate, { backgroundColor: colors.border }]}
+              >
+                <View
+                  style={[
+                    styles.loadingText,
+                    { backgroundColor: colors.surface, height: 16 },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.loadingText,
+                    {
+                      backgroundColor: colors.surface,
+                      height: 12,
+                      width: "80%",
+                    },
+                  ]}
+                />
+              </View>
+              <View style={styles.eventInfo}>
+                <View
+                  style={[
+                    styles.loadingText,
+                    {
+                      backgroundColor: colors.border,
+                      height: 16,
+                      marginBottom: 8,
+                    },
+                  ]}
+                />
+                <View
+                  style={[
+                    styles.loadingText,
+                    {
+                      backgroundColor: colors.border,
+                      height: 12,
+                      width: "70%",
+                    },
+                  ]}
+                />
+              </View>
+            </ThemedCard>
+          ))
         ) : upcomingEvents.length > 0 ? (
           upcomingEvents.map((event) => (
             <ThemedCard key={event.id} style={styles.eventCard}>
@@ -283,6 +407,31 @@ export const HomeScreen: React.FC = () => {
                   {getLocalizedName(event, "location")} • {event.time}
                 </Text>
               </View>
+              <TouchableOpacity
+                style={styles.eventFavoriteButton}
+                onPress={() => {
+                  const eventData = events.find((e) => e.id === event.id);
+                  if (eventData) {
+                    if (isFavorite(event.id, "event")) {
+                      removeFromFavorites(event.id, "event");
+                    } else {
+                      addToFavorites(eventData, "event");
+                    }
+                  }
+                }}
+              >
+                <Ionicons
+                  name={
+                    isFavorite(event.id, "event") ? "heart" : "heart-outline"
+                  }
+                  size={18}
+                  color={
+                    isFavorite(event.id, "event")
+                      ? "#FF6B6B"
+                      : colors.textSecondary
+                  }
+                />
+              </TouchableOpacity>
             </ThemedCard>
           ))
         ) : (
