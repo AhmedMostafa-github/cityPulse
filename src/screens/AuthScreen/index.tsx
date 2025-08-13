@@ -159,7 +159,7 @@ export const AuthScreen: React.FC = () => {
             placeholder={t("auth.passwordPlaceholder")}
             value={formData.password}
             onChangeText={(value) => handleInputChange("password", value)}
-            secureTextEntry
+            isPassword
             error={validationErrors.password}
           />
 
@@ -171,7 +171,7 @@ export const AuthScreen: React.FC = () => {
               onChangeText={(value) =>
                 handleInputChange("confirmPassword", value)
               }
-              secureTextEntry
+              isPassword
               error={validationErrors.confirmPassword}
             />
           )}

@@ -85,7 +85,7 @@ src/
 
 - **ThemedButton**: Versatile button component with multiple variants
 - **ThemedCard**: Card component with theme-aware styling
-- **ValidatedInput**: Form input component with built-in validation and error display
+- **ValidatedInput**: Form input component with built-in validation, error display, and password visibility toggle
 
 ## 🛠️ Technical Stack
 
