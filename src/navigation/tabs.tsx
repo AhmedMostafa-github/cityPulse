@@ -42,7 +42,7 @@ export const TabNavigator = () => {
           height: 88,
           paddingBottom: 20,
           paddingTop: 10,
-          shadowColor: theme === "dark" ? "#000" : "#000",
+          shadowColor: colors.shadow,
           shadowOffset: {
             width: 0,
             height: -2,

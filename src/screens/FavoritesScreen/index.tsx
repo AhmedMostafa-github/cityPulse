@@ -55,14 +55,14 @@ export const FavoritesScreen: React.FC = () => {
         textStyle={{
           fontSize: 16,
           fontWeight: "600",
-          color: "#FFFFFF",
+          color: colors.white,
         }}
       />
     </View>
   );
 
   const renderTabs = () => (
-    <View style={styles.tabsContainer}>
+    <View style={[styles.tabsContainer, { backgroundColor: colors.lightGray }]}>
       <TouchableOpacity
         style={[
           styles.tab,
@@ -77,7 +77,7 @@ export const FavoritesScreen: React.FC = () => {
           style={[
             styles.tabText,
             activeTab === "places"
-              ? styles.activeTabText
+              ? [styles.activeTabText, { color: colors.white }]
               : [styles.inactiveTabText, { color: colors.textSecondary }],
           ]}
         >
@@ -98,7 +98,7 @@ export const FavoritesScreen: React.FC = () => {
           style={[
             styles.tabText,
             activeTab === "events"
-              ? styles.activeTabText
+              ? [styles.activeTabText, { color: colors.white }]
               : [styles.inactiveTabText, { color: colors.textSecondary }],
           ]}
         >
@@ -127,7 +127,10 @@ export const FavoritesScreen: React.FC = () => {
                 key={venue.id}
                 style={[
                   styles.favoriteItem,
-                  { flexDirection: isRTL ? "row-reverse" : "row" },
+                  {
+                    flexDirection: isRTL ? "row-reverse" : "row",
+                    borderBottomColor: colors.border,
+                  },
                 ]}
               >
                 <View
@@ -197,7 +200,10 @@ export const FavoritesScreen: React.FC = () => {
                 key={event.id}
                 style={[
                   styles.favoriteItem,
-                  { flexDirection: isRTL ? "row-reverse" : "row" },
+                  {
+                    flexDirection: isRTL ? "row-reverse" : "row",
+                    borderBottomColor: colors.border,
+                  },
                 ]}
               >
                 <View

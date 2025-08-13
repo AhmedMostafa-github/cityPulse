@@ -14,6 +14,12 @@ export interface ThemeColors {
   error: string;
   warning: string;
   info: string;
+  white: string;
+  gold: string;
+  gray: string;
+  lightGray: string;
+  blue: string;
+  green: string;
 }
 
 export interface AppSettings {

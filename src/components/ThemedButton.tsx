@@ -100,7 +100,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
         baseStyle.color = colors.primary;
         break;
       default:
-        baseStyle.color = "#FFFFFF";
+        baseStyle.color = colors.white;
     }
 
     return baseStyle;
@@ -116,7 +116,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === "outline" ? colors.primary : "#FFFFFF"}
+          color={variant === "outline" ? colors.primary : colors.white}
         />
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>

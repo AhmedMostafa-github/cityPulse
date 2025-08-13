@@ -133,7 +133,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#f5f5f5",
     borderRadius: 12,
   },
   locationText: {
@@ -155,7 +154,6 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   actionButtonText: {
-    color: "white",
     fontSize: 14,
     fontWeight: "600",
     marginLeft: 8,

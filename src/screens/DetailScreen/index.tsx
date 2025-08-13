@@ -66,9 +66,6 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
   };
 
   const handleShare = () => {
-    const title = getLocalizedName("name") || getLocalizedName("title");
-    const description = getLocalizedName("description");
-
     Alert.alert(
       t("detail.share", "Share"),
       t("detail.shareMessage", "Share this item"),
@@ -238,7 +235,9 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
                 <Ionicons
                   name={isFavorite(item.id, type) ? "heart" : "heart-outline"}
                   size={20}
-                  color={isFavorite(item.id, type) ? "#FF6B6B" : "white"}
+                  color={
+                    isFavorite(item.id, type) ? colors.primary : colors.white
+                  }
                 />
               </View>
             </TouchableOpacity>
@@ -253,7 +252,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
           </Text>
           {type === "venue" && "rating" in item && (
             <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={16} color="#FFD700" />
+              <Ionicons name="star" size={16} color={colors.gold} />
               <Text style={[styles.rating, { color: colors.textSecondary }]}>
                 {item.rating.toFixed(1)}
               </Text>
@@ -328,7 +327,7 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
               onPress={handleDirections}
             >
               <Ionicons name="navigate" size={20} color="white" />
-              <Text style={styles.actionButtonText}>
+              <Text style={[styles.actionButtonText, { color: colors.white }]}>
                 {t("detail.getDirections", "Get Directions")}
               </Text>
             </TouchableOpacity>
@@ -342,7 +341,9 @@ export const DetailScreen: React.FC<DetailScreenProps> = ({
                 onPress={handleCall}
               >
                 <Ionicons name="call" size={20} color="white" />
-                <Text style={styles.actionButtonText}>
+                <Text
+                  style={[styles.actionButtonText, { color: colors.white }]}
+                >
                   {t("detail.call", "Call")}
                 </Text>
               </TouchableOpacity>

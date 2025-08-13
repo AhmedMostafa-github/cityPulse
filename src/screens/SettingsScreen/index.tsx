@@ -102,7 +102,7 @@ export const SettingsScreen: React.FC = () => {
               style={[
                 styles.languageText,
                 {
-                  color: language === "en" ? "#FFFFFF" : colors.primary,
+                  color: language === "en" ? colors.white : colors.primary,
                 },
               ]}
             >

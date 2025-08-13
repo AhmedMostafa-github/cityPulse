@@ -13,6 +13,12 @@ export const lightTheme: ThemeColors = {
   error: "#DC3545",
   warning: "#FFC107",
   info: "#17A2B8",
+  white: "#FFFFFF",
+  gold: "#FFD700",
+  gray: "#666666",
+  lightGray: "#f5f5f5",
+  blue: "#45B7D1",
+  green: "#96CEB4",
 };
 
 export const darkTheme: ThemeColors = {
@@ -28,6 +34,12 @@ export const darkTheme: ThemeColors = {
   error: "#DC3545",
   warning: "#FFC107",
   info: "#17A2B8",
+  white: "#FFFFFF",
+  gold: "#FFD700",
+  gray: "#666666",
+  lightGray: "#2D2D2D",
+  blue: "#45B7D1",
+  green: "#96CEB4",
 };
 
 export const getThemeColors = (theme: "light" | "dark"): ThemeColors => {

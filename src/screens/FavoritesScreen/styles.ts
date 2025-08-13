@@ -71,15 +71,9 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-  activeTab: {
-    backgroundColor: "#FF6B6B",
-  },
-  activeTabText: {
-    color: "#FFFFFF",
-  },
-  inactiveTabText: {
-    color: "#666",
-  },
+  activeTab: {},
+  activeTabText: {},
+  inactiveTabText: {},
   contentContainer: {
     paddingHorizontal: 20,
   },
@@ -115,7 +109,6 @@ export const styles = StyleSheet.create({
   },
   favoriteSubtitle: {
     fontSize: 14,
-    color: "#666",
   },
   favoriteActions: {
     flexDirection: "row",

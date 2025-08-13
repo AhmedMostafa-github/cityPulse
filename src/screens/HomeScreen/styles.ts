@@ -8,11 +8,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
   },
   fallbackText: {
     fontSize: 18,
-    color: "#666",
   },
   header: {
     paddingTop: 60,
@@ -134,12 +132,10 @@ export const styles = StyleSheet.create({
     minWidth: 50,
   },
   eventDay: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
   eventMonth: {
-    color: "#fff",
     fontSize: 12,
     fontWeight: "600",
   },

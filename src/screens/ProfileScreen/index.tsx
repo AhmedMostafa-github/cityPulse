@@ -102,7 +102,7 @@ export const ProfileScreen: React.FC = () => {
           {user.avatar ? (
             <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
           ) : (
-            <Ionicons name="person" size={40} color="#fff" />
+            <Ionicons name="person" size={40} color={colors.white} />
           )}
         </View>
         <Text style={[styles.headerTitle, { color: colors.text }]}>
@@ -142,7 +142,7 @@ export const ProfileScreen: React.FC = () => {
             <Ionicons
               name={theme === "dark" ? "moon" : "sunny"}
               size={24}
-              color={theme === "dark" ? "#FFD700" : "#FF6B6B"}
+              color={theme === "dark" ? colors.gold : colors.primary}
             />
             <Text style={[styles.themeTitle, { color: colors.text }]}>
               {t("profile.darkMode", "Dark Mode")}
