@@ -17,6 +17,7 @@
     "expo": "~53.0.20",
     "expo-font": "^13.3.2",
     "expo-linear-gradient": "^14.1.5",
+    "expo-local-authentication": "^16.0.5",
     "expo-location": "~18.1.6",
     "expo-network": "~7.1.5",
     "expo-status-bar": "~2.2.3",
@@ -26,11 +27,11 @@
     "react-native": "0.79.5",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-maps": "1.20.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
-    "zustand": "^5.0.7",
-    "react-native-maps": "1.20.1"
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

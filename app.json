@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.citypulse.app"
+      "bundleIdentifier": "com.citypulse.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +31,12 @@
       "favicon": "./assets/favicon.png"
     },
     "description": "Discover your city with City Pulse - the ultimate urban exploration app",
-    "primaryColor": "#FF6B6B"
+    "primaryColor": "#FF6B6B",
+    "extra": {
+      "eas": {
+        "projectId": "f7b9f33f-0cfc-4931-806b-725c1641bb53"
+      }
+    },
+    "owner": "ahmed_m0stafa"
   }
 }
