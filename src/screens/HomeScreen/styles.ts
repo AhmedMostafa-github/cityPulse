@@ -34,9 +34,22 @@ export const styles = StyleSheet.create({
     margin: 20,
     padding: 15,
   },
+  searchInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+  },
   searchText: {
     marginLeft: 10,
     fontSize: 16,
+  },
+  searchResultsHeader: {
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  searchResultsText: {
+    fontSize: 14,
+    fontStyle: "italic",
   },
   categoriesContainer: {
     paddingHorizontal: 20,
